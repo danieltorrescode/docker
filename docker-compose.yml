@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db:
+  db_postgres:
     container_name: postgres
     build:
       context: ./postgres
@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - /home/daniel/Documentos/postgres:/var/lib/postgresql/data
+      - ${USER_PATH}/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   db_admin:
@@ -22,3 +22,39 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "80:80"
+  db_mongo:
+    container_name: mongo
+    build:
+      context: ./mongo
+    volumes:
+      - ${USER_PATH}/mongo:/data/db
+    ports:
+      - "27017:27017"
+  db_mongo_admin:
+    container_name: mongo-express
+    build:
+      context: ./mongo-express
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
+      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+    ports:
+      - "8080:8081"
+  server_nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    volumes:
+      - ${USER_PATH}/nginx:/usr/share/nginx/html 
+    ports:
+      - "8081:80"
+  server_apache:
+    container_name: apache
+    build:
+      context: ./apache
+    volumes:
+      - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
+    ports:
+      - "8082:80"
