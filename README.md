@@ -1,8 +1,9 @@
 # Docker
 This is experimental project to setup up a docker development environment it is a work still in progress.
 
-# Branches
-Branches contain  a development environment for:
-1. master: python and postgresql
-2. php:php and postgresql
-3. node: javascript and mongodb
+# Contain a development environment for:
+- python and postgresql
+- node: javascript and mongodb
+- pgadmin and mongo-express gui tools for postgres and mongo
+- ubuntu server
+- apache and nginx services
