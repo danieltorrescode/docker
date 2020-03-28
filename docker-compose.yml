@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db_postgres:
+  postgres:
     container_name: postgres
     build:
       context: ./postgres
@@ -13,16 +13,18 @@ services:
       - ${USER_PATH}/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  db_admin:
+  pgadmin:
     container_name: pgadmin
     build:
       context: ./pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ${USER_PATH}/pgadmin:/home 
     ports:
       - "80:80"
-  db_mongo:
+  mongo:
     container_name: mongo
     build:
       context: ./mongo
@@ -30,7 +32,7 @@ services:
       - ${USER_PATH}/mongo:/data/db
     ports:
       - "27017:27017"
-  db_mongo_admin:
+  mongo_express:
     container_name: mongo-express
     build:
       context: ./mongo-express
@@ -42,7 +44,7 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
     ports:
       - "8080:8081"
-  server_nginx:
+  nginx:
     container_name: nginx
     build:
       context: ./nginx
@@ -50,7 +52,7 @@ services:
       - ${USER_PATH}/nginx:/usr/share/nginx/html 
     ports:
       - "8081:80"
-  server_apache:
+  apache:
     container_name: apache
     build:
       context: ./apache
@@ -58,3 +60,44 @@ services:
       - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
     ports:
       - "8082:80"
+  ubuntu:
+    container_name: ubuntu
+    build:
+      context: ./ubuntu
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - ${USER_PATH}/ubuntu:/home 
+    ports:
+      - "8083:8000"
+      - "8084:8001"
+      - "8085:8002"
+    tty: true
+  python:
+    container_name: python
+    build:
+      context: ./python
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - ${USER_PATH}/python:/home 
+    ports:
+      - "8086:8000"
+    tty: true
+  node:
+    container_name: node
+    build:
+      context: ./node
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - ${USER_PATH}/node:/home 
+    ports:
+      - "8087:8000"
+    tty: true
