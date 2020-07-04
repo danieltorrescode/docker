@@ -6,5 +6,5 @@ ARG GROUP_ID
 RUN useradd -ms /bin/bash -d /$USER --uid 1$USER_ID --gid node $USER
 #USER $USER
 #WORKDIR /$USER
-USER node
-WORKDIR /home
+# USER node
+# WORKDIR /home

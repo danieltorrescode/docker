@@ -13,6 +13,8 @@ services:
       - ${USER_PATH}/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    stdin_open: true
+    tty: true
   pgadmin:
     container_name: pgadmin
     build:
@@ -21,59 +23,12 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
-      - ${USER_PATH}/pgadmin:/home 
+      - ${USER_PATH}/pgadmin/servers:/pgadmin4/servers.json
+      - ${USER_PATH}/pgadmin/config:/pgadmin4/config_local.py
+      - ${USER_PATH}/pgadmin/var:/var/lib/pgadmin 
     ports:
       - "80:80"
-  mongo:
-    container_name: mongo
-    build:
-      context: ./mongo
-    volumes:
-      - ${USER_PATH}/mongo:/data/db
-    ports:
-      - "27017:27017"
-  mongo_express:
-    container_name: mongo-express
-    build:
-      context: ./mongo-express
-    environment:
-      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
-      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
-      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
-      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
-    ports:
-      - "8080:8081"
-  nginx:
-    container_name: nginx
-    build:
-      context: ./nginx
-    volumes:
-      - ${USER_PATH}/nginx:/usr/share/nginx/html 
-    ports:
-      - "8081:80"
-  apache:
-    container_name: apache
-    build:
-      context: ./apache
-    volumes:
-      - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
-    ports:
-      - "8082:80"
-  ubuntu:
-    container_name: ubuntu
-    build:
-      context: ./ubuntu
-      args:
-        USER: ${USER}
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
-    volumes:
-      - ${USER_PATH}/ubuntu:/home 
-    ports:
-      - "8083:8000"
-      - "8084:8001"
-      - "8085:8002"
+    stdin_open: true
     tty: true
   python:
     container_name: python
@@ -87,6 +42,7 @@ services:
       - ${USER_PATH}/python:/home 
     ports:
       - "8086:8000"
+    stdin_open: true
     tty: true
   node:
     container_name: node
@@ -100,4 +56,56 @@ services:
       - ${USER_PATH}/node:/home 
     ports:
       - "8087:8000"
+    stdin_open: true
     tty: true
+  # mongo:
+  #   container_name: mongo
+  #   build:
+  #     context: ./mongo
+  #   volumes:
+  #     - ${USER_PATH}/mongo:/data/db
+  #   ports:
+  #     - "27017:27017"
+  # mongo_express:
+  #   container_name: mongo-express
+  #   build:
+  #     context: ./mongo-express
+  #   environment:
+  #     ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
+  #     ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+  #     ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+  #     ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+  #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+  #   ports:
+  #     - "8080:8081"
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: ./nginx
+  #   volumes:
+  #     - ${USER_PATH}/nginx:/usr/share/nginx/html 
+  #   ports:
+  #     - "8081:80"
+  # apache:
+  #   container_name: apache
+  #   build:
+  #     context: ./apache
+  #   volumes:
+  #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
+  #   ports:
+  #     - "8082:80"
+  # ubuntu:
+  #   container_name: ubuntu
+  #   build:
+  #     context: ./ubuntu
+  #     args:
+  #       USER: ${USER}
+  #       USER_ID: ${USER_ID}
+  #       GROUP_ID: ${GROUP_ID}
+  #   volumes:
+  #     - ${USER_PATH}/ubuntu:/home 
+  #   ports:
+  #     - "8083:8000"
+  #     - "8084:8001"
+  #     - "8085:8002"
+  #   tty: true
