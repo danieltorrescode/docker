@@ -1,12 +1,12 @@
 FROM ubuntu:latest
-RUN apt update && apt upgrade -y
-RUN apt install -y \
-    aptitude \
-    curl \
-    wget \
-    vim \
-    screen \
-    git
+# RUN apt update && apt upgrade -y
+# RUN apt install -y \
+#     aptitude \
+#     curl \
+#     wget \
+#     vim \
+#     screen \
+#     git
 ARG USER
 ARG USER_ID
 ARG GROUP_ID

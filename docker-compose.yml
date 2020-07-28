@@ -102,6 +102,8 @@ services:
   #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
   #   ports:
   #     - "8082:80"
+  #   stdin_open: true
+  #   tty: true
   # ubuntu:
   #   container_name: ubuntu
   #   build:
@@ -117,6 +119,7 @@ services:
   #     - "8083:8000"
   #     - "8084:8001"
   #     - "8085:8002"
+  #   stdin_open: true
   #   tty: true
   # php:
   #   container_name: php
@@ -133,3 +136,46 @@ services:
   #     - "8088:8000"
   #   stdin_open: true
   #   tty: true
+  mariadb:
+    container_name: mariadb 
+    image: mariadb:latest
+    volumes:
+      - ${USER_PATH}/mariadb/data:/var/lib/mysql
+      - ${USER_PATH}/mariadb/config:/etc/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    ports:
+      - "8089:8000"
+    stdin_open: true
+    tty: true
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mariadb:db
+    volumes:
+      - ${USER_PATH}/phpmyadmin:/etc/phpmyadmin/config.user.inc.php
+    environment:
+      PMA_USER: wordpress
+      PMA_PASSWORD: wordpress
+    ports:
+      - "8090:80"
+    stdin_open: true
+    tty: true
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    restart: always
+    ports: 
+      - "8091:80" 
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ${USER_PATH}/wordpress:/var/www/html
