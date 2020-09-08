@@ -32,21 +32,21 @@ services:
       - "80:80"
     stdin_open: true
     tty: true
-  # python:
-  #   container_name: python
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_python
-  #     args:
-  #       USER: ${USER}
-  #       USER_ID: ${USER_ID}
-  #       GROUP_ID: ${GROUP_ID}
-  #   volumes:
-  #     - ${USER_PATH}/python:/home 
-  #   ports:
-  #     - "8086:8000"
-  #   stdin_open: true
-  #   tty: true
+  python:
+    container_name: python
+    build:
+      context: .
+      dockerfile: Dockerfile_python
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - ${USER_PATH}/python:/home 
+    ports:
+      - "8086:8000"
+    stdin_open: true
+    tty: true
   node:
     container_name: node
     build:
@@ -63,28 +63,28 @@ services:
       - "8088:8080"
     stdin_open: true
     tty: true
-  mongo:
-    container_name: mongo
-    build:
-      context: .
-      dockerfile: Dockerfile_mongo
-    volumes:
-      - ${USER_PATH}/mongo:/data/db
-    ports:
-      - "27017:27017"
-  mongo_express:
-    container_name: mongo-express
-    build:
-      context: .
-      dockerfile: Dockerfile_mongo_express
-    environment:
-      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
-      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
-      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
-      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
-    ports:
-      - "8080:8081"
+  # mongo:
+  #   container_name: mongo
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_mongo
+  #   volumes:
+  #     - ${USER_PATH}/mongo:/data/db
+  #   ports:
+  #     - "27017:27017"
+  # mongo_express:
+  #   container_name: mongo-express
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_mongo_express
+  #   environment:
+  #     ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
+  #     ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+  #     ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+  #     ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+  #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+  #   ports:
+  #     - "8080:8081"
   # nginx:
   #   container_name: nginx
   #   build:
