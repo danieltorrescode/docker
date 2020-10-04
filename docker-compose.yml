@@ -3,9 +3,7 @@ version: '3'
 services:
   postgres:
     container_name: postgres
-    build:
-      context: .
-      dockerfile: Dockerfile_postgres
+    image: postgres:latest
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -18,89 +16,59 @@ services:
     tty: true
   pgadmin:
     container_name: pgadmin
-    build:
-      context: .
-      dockerfile: Dockerfile_pgadmin
+    image: dpage/pgadmin4:latest
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - ${USER_PATH}/pgadmin/servers:/pgadmin4/servers.json
       - ${USER_PATH}/pgadmin/config:/pgadmin4/config_local.py
-      - ${USER_PATH}/pgadmin/var:/var/lib/pgadmin 
+      - ${USER_PATH}/pgadmin/var:/var/lib
     ports:
       - "80:80"
     stdin_open: true
     tty: true
-  python:
-    container_name: python
-    build:
-      context: .
-      dockerfile: Dockerfile_python
-      args:
-        USER: ${USER}
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
-    volumes:
-      - ${USER_PATH}/python:/home 
-    ports:
-      - "8086:8000"
-    stdin_open: true
-    tty: true
   node:
     container_name: node
-    build:
-      context: .
-      dockerfile: Dockerfile_node
-      args:
-        USER: ${USER}
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
+    image: node:latest
     volumes:
-      - ${USER_PATH}/node:/home 
+      - ${USER_PATH}/node:/home
     ports:
+      - "8086:4000"
       - "8087:8000"
       - "8088:8080"
     stdin_open: true
     tty: true
-  # mongo:
-  #   container_name: mongo
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_mongo
-  #   volumes:
-  #     - ${USER_PATH}/mongo:/data/db
-  #   ports:
-  #     - "27017:27017"
-  # mongo_express:
-  #   container_name: mongo-express
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_mongo_express
-  #   environment:
-  #     ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
-  #     ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
-  #     ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
-  #     ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
-  #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
-  #   ports:
-  #     - "8080:8081"
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ${USER_PATH}/mongo:/data/db
+    ports:
+      - "27017:27017"
+  mongo_express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
+      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+    ports:
+      - "8080:8081"
   # nginx:
   #   container_name: nginx
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_nginx
+  #   image: nginx:latest
   #   volumes:
-  #     - ${USER_PATH}/nginx:/usr/share/nginx/html 
+  #     - ${USER_PATH}/nginx:/usr/share/nginx/html
   #   ports:
   #     - "8081:80"
   # apache:
   #   container_name: apache
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_apache
+  #   image: httpd:latest
   #   volumes:
-  #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
+  #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs
   #   ports:
   #     - "8082:80"
   #   stdin_open: true
@@ -115,30 +83,15 @@ services:
   #       USER_ID: ${USER_ID}
   #       GROUP_ID: ${GROUP_ID}
   #   volumes:
-  #     - ${USER_PATH}/ubuntu:/home 
+  #     - ${USER_PATH}/ubuntu:/home
   #   ports:
   #     - "8083:8000"
   #     - "8084:8001"
   #     - "8085:8002"
   #   stdin_open: true
   #   tty: true
-  # php:
-  #   container_name: php
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_php
-  #     args:
-  #       USER: ${USER}
-  #       USER_ID: ${USER_ID}
-  #       GROUP_ID: ${GROUP_ID}
-  #   volumes:
-  #     - ${USER_PATH}/php:/home 
-  #   ports:
-  #     - "8088:8000"
-  #   stdin_open: true
-  #   tty: true
   # mariadb:
-  #   container_name: mariadb 
+  #   container_name: mariadb
   #   image: mariadb:latest
   #   volumes:
   #     - ${USER_PATH}/mariadb/data:/var/lib/mysql
@@ -171,8 +124,8 @@ services:
   #   container_name: wordpress
   #   image: wordpress
   #   restart: always
-  #   ports: 
-  #     - "8091:80" 
+  #   ports:
+  #     - "8091:80"
   #   environment:
   #     WORDPRESS_DB_HOST: mariadb
   #     WORDPRESS_DB_USER: wordpress
