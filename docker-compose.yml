@@ -21,9 +21,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
-      - ${USER_PATH}/pgadmin/servers:/pgadmin4/servers.json
-      - ${USER_PATH}/pgadmin/config:/pgadmin4/config_local.py
-      - ${USER_PATH}/pgadmin/var:/var/lib
+      - ${USER_PATH}/pgadmin:/var/lib/pgadmin
     ports:
       - "80:80"
     stdin_open: true
