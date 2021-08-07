@@ -1,6 +1,45 @@
-version: '3'
+version: '3.7'
 
 services:
+  python:
+    container_name: python
+    build:
+      context: .
+      dockerfile: DockerFile.python
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - ${USER_PATH}:/app
+    command: sh -c "python -m http.server 8002"
+    # command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - postgres
+    networks:
+      - dev
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ${USER_PATH}/postgres/pgadmin:/var/lib/pgadmin
+    ports:
+      - "80:80"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - postgres
+    networks:
+      - dev
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -9,125 +48,15 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - ${USER_PATH}/postgres:/var/lib/postgresql/data
+      - ${USER_PATH}/postgres/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     stdin_open: true
     tty: true
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    volumes:
-      - ${USER_PATH}/pgadmin:/var/lib/pgadmin
-    ports:
-      - "80:80"
-    stdin_open: true
-    tty: true
-  node:
-    container_name: node
-    image: node:latest
-    volumes:
-      - ${USER_PATH}/node:/home
-    ports:
-      - "8086:4000"
-      - "8087:8000"
-      - "8088:8080"
-    stdin_open: true
-    tty: true
-  mongo:
-    container_name: mongo
-    image: mongo:latest
-    volumes:
-      - ${USER_PATH}/mongo:/data/db
-    ports:
-      - "27017:27017"
-  mongo_express:
-    container_name: mongo-express
-    image: mongo-express:latest
-    environment:
-      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
-      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
-      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
-      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
-    ports:
-      - "8080:8081"
-  # nginx:
-  #   container_name: nginx
-  #   image: nginx:latest
-  #   volumes:
-  #     - ${USER_PATH}/nginx:/usr/share/nginx/html
-  #   ports:
-  #     - "8081:80"
-  # apache:
-  #   container_name: apache
-  #   image: httpd:latest
-  #   volumes:
-  #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs
-  #   ports:
-  #     - "8082:80"
-  #   stdin_open: true
-  #   tty: true
-  # ubuntu:
-  #   container_name: ubuntu
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_ubuntu
-  #     args:
-  #       USER: ${USER}
-  #       USER_ID: ${USER_ID}
-  #       GROUP_ID: ${GROUP_ID}
-  #   volumes:
-  #     - ${USER_PATH}/ubuntu:/home
-  #   ports:
-  #     - "8083:8000"
-  #     - "8084:8001"
-  #     - "8085:8002"
-  #   stdin_open: true
-  #   tty: true
-  # mariadb:
-  #   container_name: mariadb
-  #   image: mariadb:latest
-  #   volumes:
-  #     - ${USER_PATH}/mariadb/data:/var/lib/mysql
-  #     - ${USER_PATH}/mariadb/config:/etc/mysql
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: admin
-  #     MYSQL_DATABASE: wordpress
-  #     MYSQL_USER: wordpress
-  #     MYSQL_PASSWORD: wordpress
-  #   ports:
-  #     - "8089:8000"
-  #   stdin_open: true
-  #   tty: true
-  # phpmyadmin:
-  #   container_name: phpmyadmin
-  #   image: phpmyadmin/phpmyadmin:latest
-  #   links:
-  #     - mariadb:db
-  #   volumes:
-  #     - ${USER_PATH}/phpmyadmin:/etc/phpmyadmin/config.user.inc.php
-  #   environment:
-  #     PMA_USER: wordpress
-  #     PMA_PASSWORD: wordpress
-  #   ports:
-  #     - "8090:80"
-  #   stdin_open: true
-  #   tty: true
-  # wordpress:
-  #   container_name: wordpress
-  #   image: wordpress
-  #   restart: always
-  #   ports:
-  #     - "8091:80"
-  #   environment:
-  #     WORDPRESS_DB_HOST: mariadb
-  #     WORDPRESS_DB_USER: wordpress
-  #     WORDPRESS_DB_PASSWORD: wordpress
-  #     WORDPRESS_DB_NAME: wordpress
-  #   volumes:
-  #     - ${USER_PATH}/wordpress:/var/www/html
+    networks:
+      - dev
+
+networks:
+  dev:
+    external:
+      name: dev
