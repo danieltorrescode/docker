@@ -15,9 +15,9 @@ services:
     command: sh -c "python -m http.server 8002"
     # command: sh -c "python manage.py runserver 0.0.0.0:8000"
     ports:
-      - "8000:8000"
-      - "8001:8001"
       - "8002:8002"
+      - "8003:8003"
+      - "8004:8004"
     stdin_open: true
     tty: true
     depends_on:
