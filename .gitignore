@@ -1,3 +1,4 @@
 postgres/data/*
 postgres/pgadmin/*
 !postgres/pgadmin/Queries.sql
+mongo

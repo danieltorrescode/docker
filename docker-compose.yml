@@ -56,6 +56,35 @@ services:
     networks:
       - dev
 
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ${USER_PATH}/mongo:/data/db
+    ports:
+      - "27017:27017"
+    stdin_open: true
+    tty: true
+    networks:
+      - dev
+  mongo_express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME}
+      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+    ports:
+      - "8005:8081"
+    depends_on:
+      - mongo
+    stdin_open: true
+    tty: true
+    networks:
+      - dev
+
 networks:
   dev:
     external:
