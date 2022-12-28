@@ -32,6 +32,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - ${USER_PATH}/postgres/pgadmin:/var/lib/pgadmin
+    #   - ${USER_PATH}/postgres/pgadmin/certs:/certs/server.cert
+    #   - ${USER_PATH}/postgres/pgadmin/key:/certs/server.key
+    #   - ${USER_PATH}/postgres/pgadmin/json:/pgadmin4/servers.json
     ports:
       - "80:80"
     stdin_open: true
@@ -55,8 +58,124 @@ services:
     tty: true
     networks:
       - dev
+  # mongo:
+  #   container_name: mongo
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_mongo
+  #   volumes:
+  #     - ${USER_PATH}/mongo:/data/db
+  #   ports:
+  #     - "27017:27017"
+  # mongo_express:
+  #   container_name: mongo-express
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_mongo_express
+  #   environment:
+  #     ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
+  #     ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+  #     ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+  #     ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+  #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+  #   ports:
+  #     - "8080:8081"
+  # nginx:
+  #   container_name: nginx
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_nginx
+  #   volumes:
+  #     - ${USER_PATH}/nginx:/usr/share/nginx/html 
+  #   ports:
+  #     - "8081:80"
+  # apache:
+  #   container_name: apache
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_apache
+  #   volumes:
+  #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
+  #   ports:
+  #     - "8082:80"
+  #   stdin_open: true
+  #   tty: true
+  # ubuntu:
+  #   container_name: ubuntu
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_ubuntu
+  #     args:
+  #       USER: ${USER}
+  #       USER_ID: ${USER_ID}
+  #       GROUP_ID: ${GROUP_ID}
+  #   volumes:
+  #     - ${USER_PATH}/ubuntu:/home 
+  #   ports:
+  #     - "8083:8000"
+  #     - "8084:8001"
+  #     - "8085:8002"
+  #   stdin_open: true
+  #   tty: true
+  # mariadb:
+  #   container_name: mariadb 
+  #   image: mariadb:latest
+  #   volumes:
+  #     - ${USER_PATH}/mariadb/data:/var/lib/mysql
+  #     - ${USER_PATH}/mariadb/config:/etc/mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: admin
+  #     MYSQL_DATABASE: wordpress
+  #     MYSQL_USER: wordpress
+  #     MYSQL_PASSWORD: wordpress
+  #   ports:
+  #     - "8089:8000"
+  #   stdin_open: true
+  #   tty: true
+  # phpmyadmin:
+  #   container_name: phpmyadmin
+  #   image: phpmyadmin/phpmyadmin:latest
+  #   links:
+  #     - mariadb:db
+  #   volumes:
+  #     - ${USER_PATH}/phpmyadmin:/etc/phpmyadmin/config.user.inc.php
+  #   environment:
+  #     PMA_USER: wordpress
+  #     PMA_PASSWORD: wordpress
+  #   ports:
+  #     - "8090:80"
+  #   stdin_open: true
+  #   tty: true
+  # php:
+  #   container_name: php
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_php
+  #     args:
+  #       USER: ${USER}
+  #       USER_ID: ${USER_ID}
+  #       GROUP_ID: ${GROUP_ID}
+  #   volumes:
+  #     - ${USER_PATH}/php:/home 
+  #   ports:
+  #     - "8088:8000"
+  #   stdin_open: true
+  #   tty: true
+  # wordpress:
+  #   container_name: wordpress
+  #   image: wordpress
+  #   restart: always
+  #   ports: 
+  #     - "8091:80" 
+  #   environment:
+  #     WORDPRESS_DB_HOST: mariadb
+  #     WORDPRESS_DB_USER: wordpress
+  #     WORDPRESS_DB_PASSWORD: wordpress
+  #     WORDPRESS_DB_NAME: wordpress
+  #   volumes:
+  #     - ${USER_PATH}/wordpress:/var/www/html
 
 networks:
   dev:
-    external:
-      name: dev
+    name: dev
