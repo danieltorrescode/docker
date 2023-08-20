@@ -1,3 +1,5 @@
 postgres
 mongo
 phpmyadmin
+pgadmin
+grafana

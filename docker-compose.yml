@@ -1,48 +1,6 @@
 version: '3.7'
 
 services:
-  python:
-    container_name: python
-    build:
-      context: .
-      dockerfile: DockerFile.python
-      args:
-        USER: ${USER}
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
-    volumes:
-      - ${USER_PATH}:/app
-    command: sh -c "python -m http.server 8002"
-    # command: sh -c "python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8002:8002"
-      - "8003:8003"
-      - "8004:8004"
-    stdin_open: true
-    tty: true
-    depends_on:
-      - postgres
-    networks:
-      - dev
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    volumes:
-      - ${USER_PATH}/postgres/pgadmin:/var/lib/pgadmin
-    #   - ${USER_PATH}/postgres/pgadmin/certs:/certs/server.cert
-    #   - ${USER_PATH}/postgres/pgadmin/key:/certs/server.key
-    #   - ${USER_PATH}/postgres/pgadmin/json:/pgadmin4/servers.json
-    ports:
-      - "80:80"
-    stdin_open: true
-    tty: true
-    depends_on:
-      - postgres
-    networks:
-      - dev
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -58,6 +16,71 @@ services:
     tty: true
     networks:
       - dev
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - ${USER_PATH}/pgadmin:/var/lib/pgadmin
+    #   - ${USER_PATH}/postgres/pgadmin/certs:/certs/server.cert
+    #   - ${USER_PATH}/postgres/pgadmin/key:/certs/server.key
+    #   - ${USER_PATH}/postgres/pgadmin/json:/pgadmin4/servers.json
+    ports:
+      - "80:80"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - postgres
+    networks:
+      - dev
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   volumes:
+  #     - ${USER_PATH}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - dev
+  # node-exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   volumes: 
+  #     - /proc:/host/proc:ro 
+  #     - /sys:/host/sys:ro 
+  #     - /:/rootfs:ro 
+  #   command: 
+  #     - '--path.procfs=/host/proc' 
+  #     - '--path.rootfs=/rootfs' 
+  #     - '--path.sysfs=/host/sys' 
+  #     - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  #   ports:
+  #     - "9100:9100"
+  #   networks:
+  #     - dev
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   container_name: cadvisor
+  #   ports:
+  #   - 8080:8080
+  #   volumes:
+  #   - /:/rootfs:ro
+  #   - /var/run:/var/run:rw
+  #   - /sys:/sys:ro
+  #   - /var/lib/docker/:/var/lib/docker:ro
+  #   networks:
+  #     - dev
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   volumes:
+  #     - ${USER_PATH}/grafana:/var/lib/grafana
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - dev
   # mongo:
   #   container_name: mongo
   #   build:
@@ -80,6 +103,29 @@ services:
   #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
   #   ports:
   #     - "8080:8081"
+  # python:
+  #   container_name: python
+  #   build:
+  #     context: .
+  #     dockerfile: DockerFile.python
+  #     args:
+  #       USER: ${USER}
+  #       USER_ID: ${USER_ID}
+  #       GROUP_ID: ${GROUP_ID}
+  #   volumes:
+  #     - ${USER_PATH}:/app
+  #   command: sh -c "python -m http.server 8002"
+  #   # command: sh -c "python manage.py runserver 0.0.0.0:8000"
+  #   ports:
+  #     - "8002:8002"
+  #     - "8003:8003"
+  #     - "8004:8004"
+  #   stdin_open: true
+  #   tty: true
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - dev
   # nginx:
   #   container_name: nginx
   #   build:
@@ -98,23 +144,6 @@ services:
   #     - ${USER_PATH}/apache:/usr/local/apache2/htdocs 
   #   ports:
   #     - "8082:80"
-  #   stdin_open: true
-  #   tty: true
-  # ubuntu:
-  #   container_name: ubuntu
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile_ubuntu
-  #     args:
-  #       USER: ${USER}
-  #       USER_ID: ${USER_ID}
-  #       GROUP_ID: ${GROUP_ID}
-  #   volumes:
-  #     - ${USER_PATH}/ubuntu:/home 
-  #   ports:
-  #     - "8083:8000"
-  #     - "8084:8001"
-  #     - "8085:8002"
   #   stdin_open: true
   #   tty: true
   # mariadb:
@@ -162,19 +191,23 @@ services:
   #     - "8088:8000"
   #   stdin_open: true
   #   tty: true
-  # wordpress:
-  #   container_name: wordpress
-  #   image: wordpress
-  #   restart: always
-  #   ports: 
-  #     - "8091:80" 
-  #   environment:
-  #     WORDPRESS_DB_HOST: mariadb
-  #     WORDPRESS_DB_USER: wordpress
-  #     WORDPRESS_DB_PASSWORD: wordpress
-  #     WORDPRESS_DB_NAME: wordpress
+  # ubuntu:
+  #   container_name: ubuntu
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile_ubuntu
+  #     args:
+  #       USER: ${USER}
+  #       USER_ID: ${USER_ID}
+  #       GROUP_ID: ${GROUP_ID}
   #   volumes:
-  #     - ${USER_PATH}/wordpress:/var/www/html
+  #     - ${USER_PATH}/ubuntu:/home 
+  #   ports:
+  #     - "8083:8000"
+  #     - "8084:8001"
+  #     - "8085:8002"
+  #   stdin_open: true
+  #   tty: true
 
 networks:
   dev:
