@@ -81,28 +81,28 @@ services:
   #     - "3000:3000"
   #   networks:
   #     - dev
-  mongo:
-    container_name: mongo
-    image: mongo
-    volumes:
-      - ${USER_PATH}/mongo:/data/db
-    ports:
-      - "27017:27017"
-    networks:
-      - dev
-  mongo_express:
-    container_name: mongo-express
-    image: mongo-express
-    environment:
-      ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
-      ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
-      ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
-      ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
-    ports:
-      - "8081:8081"
-    networks:
-      - dev
+  # mongo:
+  #   container_name: mongo
+  #   image: mongo
+  #   volumes:
+  #     - ${USER_PATH}/mongo:/data/db
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - dev
+  # mongo_express:
+  #   container_name: mongo-express
+  #   image: mongo-express
+  #   environment:
+  #     ME_CONFIG_OPTIONS_EDITORTHEME: ${ME_CONFIG_OPTIONS_EDITORTHEME} 
+  #     ME_CONFIG_MONGODB_SERVER: ${ME_CONFIG_MONGODB_SERVER}
+  #     ME_CONFIG_MONGODB_PORT: ${ME_CONFIG_MONGODB_PORT}
+  #     ME_CONFIG_BASICAUTH_USERNAME: ${ME_CONFIG_BASICAUTH_USERNAME}
+  #     ME_CONFIG_BASICAUTH_PASSWORD: ${ME_CONFIG_BASICAUTH_PASSWORD}
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - dev
   # python:
   #   container_name: python
   #   build:
